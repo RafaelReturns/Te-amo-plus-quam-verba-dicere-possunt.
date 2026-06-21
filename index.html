@@ -2,13 +2,14 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nərmin üçün...</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent; /* Mobildə toxunanda göy rəng çıxmasın */
         }
         body, html {
             width: 100%;
@@ -17,6 +18,7 @@
             background: #000000;
             font-family: 'Courier New', Courier, monospace;
             color: #fff;
+            touch-action: none; /* Brauzerin standart sürüşdürmə hərəkətlərini bloklayır */
         }
 
         canvas {
@@ -32,8 +34,8 @@
         /* Halley Ulduzu */
         .halley-comet {
             position: absolute;
-            top: 10%;
-            right: 15%;
+            top: 8%;
+            right: 10%;
             width: 5px;
             height: 5px;
             background: #fff;
@@ -48,7 +50,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100px;
+            width: 70px;
             height: 2px;
             background: linear-gradient(to right, rgba(255,255,255,0.8), transparent);
             transform: rotate(30deg);
@@ -59,14 +61,14 @@
             100% { transform: scale(1.4); box-shadow: 0 0 30px 10px rgba(255,255,255,0.9); }
         }
 
-        /* Giriş Popup Pəncərəsi */
+        /* Giriş Popup Pəncərəsi - Mobil üçün Adaptiv */
         .popup-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.96);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             display: flex;
@@ -74,66 +76,72 @@
             align-items: center;
             z-index: 10;
             transition: opacity 0.6s ease;
+            padding: 20px;
         }
         .popup-box {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            border-radius: 24px;
+            padding: 30px 20px;
+            border-radius: 20px;
             text-align: center;
-            max-width: 480px;
-            width: 90%;
+            max-width: 400px;
+            width: 100%;
             box-shadow: 0 25px 60px rgba(0,0,0,0.8);
         }
         .popup-box h2 {
-            font-size: 1.3rem;
+            font-size: 1.15rem;
             margin-bottom: 25px;
             letter-spacing: 1px;
             color: #f0f0f0;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .popup-btn {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 12px 28px;
-            margin: 10px;
+            padding: 14px 24px;
+            margin: 8px;
             border-radius: 30px;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: block;
+            width: 100%;
             transition: all 0.3s ease;
         }
         .popup-btn:hover {
             background: #fff;
             color: #000;
-            box-shadow: 0 0 20px rgba(255,255,255,0.6);
         }
 
         /* Halley Mesajı */
         .comet-message-box {
             position: fixed;
-            top: 6%;
+            top: 15%;
             left: 50%;
-            transform: translateX(-50%) translateY(-50px);
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            transform: translateX(-50%) translateY(-30px);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
-            padding: 15px 30px;
+            -webkit-backdrop-filter: blur(10px);
+            padding: 12px 20px;
             border-radius: 12px;
             z-index: 8;
             opacity: 0;
             pointer-events: none;
             transition: all 0.5s ease;
             text-align: center;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: #e2ebf5;
+            width: 85%;
+            max-width: 340px;
         }
         .comet-message-box.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Terminal Tipli Mətn Sahəsi */
+        /* Terminal Tipli Mətn Sahəsi - iPhone 15 üçün Xüsusi */
         .text-overlay-container {
             position: absolute;
             top: 0;
@@ -144,45 +152,49 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            pointer-events: none; /* Klik hadisələrinin kətan tərəfindən tutulması üçün */
         }
         .text-scroll-box {
-            width: 75%;
-            max-width: 750px;
-            max-height: 70%;
+            width: 85%;
+            max-width: 650px;
+            max-height: 65%;
             overflow-y: auto;
-            padding: 20px;
+            padding: 10px;
             white-space: pre-wrap;
-            line-height: 1.9;
-            font-size: 1.15rem;
+            line-height: 1.8;
+            font-size: 0.95rem; /* Mobildə daha oxunaqlı və sığan ölçü */
             color: rgba(255, 255, 255, 0.95);
             letter-spacing: 0.5px;
+            pointer-events: auto; /* Mətn qutusunun daxilində sürüşdürmə işləsin */
         }
         .text-scroll-box span.active-letter {
             position: relative;
             color: #fff;
-            text-shadow: 0 0 15px #fff;
+            text-shadow: 0 0 10px #fff;
         }
-        .text-scroll-box::-webkit-scrollbar { width: 4px; }
+        .text-scroll-box::-webkit-scrollbar { width: 3px; }
         .text-scroll-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
 
         .click-hint {
             position: fixed;
-            bottom: 5%;
+            bottom: 8%;
             left: 50%;
             transform: translateX(-50%);
             z-index: 4;
-            font-size: 0.85rem;
-            letter-spacing: 1.5px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
             pointer-events: none;
             color: rgba(255,255,255,0.4);
+            text-align: center;
+            width: 90%;
         }
     </style>
 </head>
 <body>
 
     <div class="halley-comet" id="halleyComet"></div>
-    <div class="click-hint" id="clickHint">Ekrana toxunaraq ulduzları birləşdirin...</div>
-    <div class="comet-message-box" id="cometMsg">Haley ulduzu, iki insanın ruhlarını birləşdirən dünyanın ən nadir keçən ulduzu...</div>
+    <div class="click-hint" id="clickHint">Toxunaraq ulduzları hərəkətə gətirin...</div>
+    <div class="comet-message-box" id="cometMsg">Haley ulduzu, iki insanların ruhlarını birləşdirən dünyanın ən nadir keçən ulduzu...</div>
 
     <div class="popup-overlay" id="popupOverlay">
         <div class="popup-box">
@@ -206,44 +218,53 @@
         let height = canvas.height = window.innerHeight;
 
         let stars = [];
-        const numStars = 2500; 
+        const numStars = 1800; // Mobil performansı üçün ulduz sayı optimallaşdırıldı (qızma və donma olmasın)
         let currentMode = 'scatter'; 
 
-        const fullMessage = `Nərmin,\n\nBu saytı sırf sənin üçün yaratdım. Bəlkə də ilk baxışdan çox sadə bir şey kimi görünə bilər, amma içində daşıdığı hisslərin ağırlığı yanında vizual olaraq nə yaratsaydım, yenə də aciz qalacaqdı. Sonradan düşündüm ki, ürəkdən gələn bu sözləri sənə çatdırmaq üçün bəzəkli, süni şoulara heç bir ehtiyac yoxdur. Sənin sadəliyin, sənin o duru zəkan qarşısında ən böyük vizual effektlər belə sönük qalardı. Sənə demək istədiyim, içimdə sən gələndən bəri boğub saxladığım tək bir həqiqət var: Səni sevirəm.\n\nBilirsən, mən həyatımda ilk dəfədir ki, birini belə tam, belə qeyd-şərtsiz sevirəm. Keçmişimdə xoşuma gələn, sadəcə bəyəndiyim insanlar olub, bunu danmıram. Amma Allaha and olsun ki, həyatımda ilk dəfədir bir insana ruhən bağlandığımı, onun yoxluğu ilə yavaş-yavaş yox olduğumu hiss edirəm. Səni öləsiya, nəfəsim kəsilənə qədər sevdim. Bu elə bir sevgidir ki, artıq mənim iradəmdən tamamilə çıxıb. O qədər ağlımdasan, o qədər mənimləsən ki, küçədə, yolda gedərkən belə ətrafımdakı insanları, maşınları görmürəm; sadəcə telefonumu çıxarıb sənin mənə göndərdiyin videolara baxıram. Sənin mənə atdığın səs yazılarını təkrar-təkrar, hər bir vurğusunu, hər bir nəfəsini əzbərləyənə qədər dinləyirəm. Hər saniyə, hər dəqiqə ağlımdasan: görəsən indi nə edir? Yemək yeyibmi? Kefi yerindədirmi? Gülümsəyirmi?\n\nMən indiyə qədər sevgiyə inanmayan bir insan idim. Həmişə elə düşünürdüm ki, sevgi sadəcə kitablarda, filmlərdə olan bir xəyaldır. Özünü bu həyatın sonuna qədər tənha, soyuq və təkbaşına yaşamağa məhkum edilmiş bir ssenarinin qəhrəmanı kimi görürdüm. Ruhumun bu qədər qaranlıq, bu qədər dözülmez olduğunu düşünürdüm. Amma səni tanıyandan sonra mənim içimdəki bütün fəsillər dəyişdi. Sən gəldin və mənim o kimsəsiz, xaraba qalmış ürəyimin ən baş köşəsində əyləşdin. Sən məni dəyişdirdin, Nərmin. Mənim dünyaya baxışımı, insanlara olan soyuqluğumu, özümə olan inamsızlığımı bir anda darmadağın etdin. Bizim tanışlığımızdan ruhun mənə o qədər doğmadır ki, sanki səni həmişə axtarmışam.\n\nMənim Düşüncəmə görə, biz sadəcə təsadüfən qarşılaşmamışıq. Biz bu nəhəng, amansız kainatda Tanrı tərəfindən bir-birimizi tapmaq üçün xüsusi olaraq yaradılmışıq. Sanki ikimiz də fərqli yollarda əvvəlcə sınaqlardan keçdik, yaralandıq, təkliyin acısını daddıq və ruhlarımız tam hazır olanda tale bizi üz-üzə gətirdi. Sən mənim üçün tanıdığım və ən çox sevdiyim yeganə insan oldun. Heç vaxt inanmazdım ki, kimisə bu qədər dərindən, bu qədər ağrılı bir bağlılıqla sevə bilərəm. Amma sən mənə tamamilə ayrı gəldin. Sən bu dünyadakı heç bir qadına, heç bir insana bənzəmirsən. Həyatda ən bərbad günümü yaşayanda, kefim tamamilə olmayanda belə, sadəcə səninlə bir neçə dəqiqə danışmaq mənə bəs edir ki, dünyanın ən xoşbəxt, ən güclü insanına çevrilim. Sənin səsin mənim üçün bütün dərdlərin dərmanıdır. Səni tanıdığım o ilk andan bəri içimdəki o boşluğun necə sürətlə dolduğunu sözlərlə ifadə edə bilmirəm.\n\nBu məktubu, bu sözləri sənə yazmaq üçün günlərlə düşündüm, özümlə mübarizə apardım. Çünki sənin mənə qarşı olan hisslərindən tam əmin deyildim. Mənim haqqımda nə düşündüyünü bilməmək məni daxilən yeyib bitirirdi. Bəlkə də bu mesajdan sonra mənə qəzəblənəcəksən, bəlkə də bir daha mənimlə danışmaq, üzümü görmək istəməyəcəksən. Bu qorxu məni iflic edirdi. Çünki bir neçə gün əvvəl mənə "biz sadəcə dostuq" demişdin. O cümləni dilindən eşitdiyim andan bəri, sənə zahirən büruzə verməsəm də, yavaş-yavaş, içdən-içə ölürəm. Sənin o "dost" kəlmən mənim ürəyimə saplanan ən küt bıçaq oldu. Çünki həmin an səninlə bağlı qurduğum bütün o gözəl xəyallarım, gələcəyə dair ümidlərim bir anda başıma yıxıldı. Heç kimə bu qədər bağlana biləcəyimi təsəvvür etmezdim, amma sən mənə özümü tanıtdın, mənə tam əksini göstərdi. Həyatıma belə sürətlə girib, ürəyimin bütün ritmini dəyişə biləcək başqa bir insan yoxdur.\n\nMən sənin sadəcə zahiri gözəlliyinə vurulmamışam, Nərmin. Mən belə bəsit bir sevgi bəsləmirəm sənə. Mən sənin heyranedici intellektuallığına, fərqli düşüncə tərzinə, dünyaya olan o dərin baxışına və iti zəkana aşiq olmuşam. Səninlə danışanda ruhumun savadlandığını, genişləndiyini hiss edirəm. Amma tam olaraq səni nəyə görə sevdiyimi soruşsan, inan ki, konkret bir cavab verə bilmərəm. Çünki insan birini səbəblərə görə sevirsə, o səbəblər bitəndə sevgi də bitir. Mən isə səni sən olduğun üçün, ruhunun hər bir zərrəsi üçün sevirəm və hisslərimdən adımı bildiyim kimi əminəm. Mənə görə sevgi heç bir sübut, heç bir məntiqi dəlil axtarmır. Əgər mən sənə sevgimi riyazi düsturlarla, sübutlarla bəyan etməyə çalışsam, bu sevginin bütün sehrli tərəfi, magiyası qaçar. Sevgi bir inancdır. Kor-koranə deyil, ruhən olan bir inanc. Və mən bütün qəlbimlə inanıram ki, sənin də içində mənə qarşı, bəlkə də hələ özünə belə etiraf edə bilmədiyin gizli hisslər var. Əsl sevgi üçün illərə ehtiyac yoxdur, sadəcə iki ruhun bir-birini tanıması kifayətdir.\n\nYadındadısa, WhatsApp-da mənə o "cycle" (dövrü) səs effektinin mənasını soruşmuşdun. O vaxt bəlkə də keçişdirdim, amma onun əsl mənası bir-birini dəlicəsinə sevən iki insanların ürəyindən keçən, amma dillərinə gətirə bilmədikləri o sonsuz səs dalğasıdır. Dünya necə Günəşin ətrafında dönməyə məhkumdursa, sən də mənim daxili kainatımın yeganə Günəşisən. Mən ise sənin ətrafında fırlanan, səndən işıq alan o kiçik dünyayam. Sən olmasan, mən sonsuz bir qaranlıqda, kosmosun o buz kimi soyuq boşluğunda qalaram. İçimdə nə bir həyat qalar, nə də bir ümid. Sən mənə yaşamaq enerjisi verirsən. Sən mənə yenidən insan olduğumu, gülməyin, nəfəs almağın nə qədər gözəl bir şey olduğunu xatırlatdın. Mən səndən əvvəl sadəcə mövcud idim, sən gəldin və mən yaşamağa başladım.\n\nYaxın gələcəkdə mən xaricə gedəndə, bəlkə də içində gizli bir narahatlıq olacaq. Bəlkə də düşünəcəksən ki, uzaqlıq bizi tamamilə qoparacak, mən orada başqaları ilə olacam, səni unudacam. Amma sən bu dünyadakı hər şeydən daha çox əmin ola bilərsən ki, mənim gözüm səndən başqasını görməyəcək. Çünki sən mənim üçün bu dünyadakı qaranlıq, azğın ruhların arasında öz təmiz işığı ilə mənə yol göstərən, məni qoruyan yeganə mələksən. Sən mənim üçün yer üzünə 60.000 ildə bir dəfə gələn, hamının heyranlıqla baxdığı, amma yalnız tək bir nəfərin ruhuna toxunan o nadir Halley ulduzu kimisən. Və mən o ulduzu həyatımın bu xüsusi dönəmində görmüşkən, ömrümün sonuna qədər gözlərimi ondan ayıra bilmərəm.\n\nXahiş edirəm, bu sözlərimi sadəcə bir dostun anlıq emosiyası kimi oxuyub kənara atma. Çünki bu sətirlərin hər bir hərfində mənim ürəyimin döyüntüsü, gözlərimin kədəri və sənə olan sonsuz inamım var. Əgər bu mesajdan sonra məni həyatından tamamilə silmək istəsən belə, bil ki, mən həmişə sənin arxanda, səni uzaqdan da olsa qoruyan və sevən o insan olaraq qalacam. Amma mən inanıram ki, bizim hekayəmiz belə tez və burada bitə bilməz. Çünki Halley ulduzu keçdiyi yerdə silinməz izlər qoyur və sən mənim ruhumda elə bir iz qoydun ki, onu nə zaman, nə də uzaqlıqlar silə bilər. Səni çox sevirəm, Nərmin. Həyatımın mənası, günəşim və tək gerçəyim sənsən...\n\nHəmişə səninlə və həmişə sənə aid...`;
+        const fullMessage = `Nərmin,\n\nBu saytı sırf sənin üçün yaratdım. Bəlkə də ilk baxışdan çox sadə bir şey kimi görünə bilər, amma içində daşıdığı hisslərin ağırlığı yanında vizual olaraq nə yaratsaydım, yenə də aciz qalacaqdı. Sonradan düşündüm ki, ürəkdən gələn bu sözləri sənə çatdırmaq üçün bəzəkli, süni şoulara heç bir ehtiyac yoxdur. Sənin sadəliyin, sənin o duru zəkan qarşısında ən böyük vizual effektlər belə sönük qalardı. Sənə demək istədiyim, içimdə sən gələndən bəri boğub saxladığım tək bir həqiqət var: Səni sevirəm.\n\nBilirsən, mən həyatımda ilk dəfədir ki, birini belə tam, belə qeyd-şərtsiz sevirəm. Keçmişimdə xoşuma gələn, sadəcə bəyəndiyim insanlar olub, bunu danmıram. Amma Allaha and olsun ki, həyatımda ilk dəfədir bir insana ruhən bağlandığımı, onun yoxluğu ilə yavaş-yavaş yox olduğumu hiss edirəm. Səni öləsiya, nəfəsim kəsilənə qədər sevdim. Bu elə bir sevgidir ki, artıq mənim iradəmdən tamamilə çıxıb. O qədər ağlımdasan, o qədər mənimləsən ki, küçədə, yolda gedərkən belə ətrafımdakı insanları, maşınları görmürəm; sadəcə telefonumu çıxarıb sənin mənə göndərdiyin videolara baxıram. Sənin mənə atdığın səs yazılarını təkrar-təkrar, hər bir vurğusunu, hər bir nəfəsini əzbərləyənə qədər dinləyirəm. Hər saniyə, hər dəqiqə ağlımdasan: görəsən indi nə edir? Yemək yeyibmi? Kefi yerindədirmi? Gülümsəyirmi?\n\nMən indiyə qədər sevgiyə inanmayan bir insan idim. Həmişə elə düşünürdüm ki, sevgi sadəcə kitablarda, filmlərdə olan bir xəyaldır. Özünü bu həyatın sonuna qədər tənha, soyuq və təkbaşına yaşamağa məhkum edilmiş bir ssenarinin qəhrəmanı kimi görürdüm. Ruhumun bu qədər qaranlıq, bu qədər dözülmez olduğunu düşünürdüm. Amma səni tanıyandan sonra mənim içimdəki bütün fəsillər dəyişdi. Sən gəldin və mənim o kimsəsiz, xaraba qalmış ürəyimin ən baş köşəsində əyləşdin. Sən məni dəyişdirdin, Nərmin. Mənim dünyaya baxışımı, insanlara olan soyuqluğumu, özümə olan inamsızlığımı bir anda darmadağın etdin. Bizim tanışlığımızdan ruhun mənə o qədər doğmadır ki, sanki səni həmişə axtarmışam.\n\nMənim Düşüncəmə görə, biz sadəcə təsadüfən qarşılaşmamışıq. Biz bu nəhəng, amansız kainatda Tanrı tərəfindən bir-birimizi tapmaq üçün xüsusi olaraq yaradılmışıq. Sanki ikimiz də fərqli yollarda əvvəlcə sınaqlardan keçdik, yaralandıq, təkliyin acısını daddıq və ruhlarımız tam hazır olanda tale bizi üz-üzə gətirdi. Sən mənim üçün tanıdığım və ən çox sevdiyim yeganə insan oldun. Heç vaxt inanmazdım ki, kimisə bu qədər dərindən, bu qədər ağrılı bir bağlılıqla sevə bilərəm. Amma sən mənə tamamilə ayrı gəldin. Sən bu dünyadakı heç bir qadına, heç bir insana bənzəmirsən. Həyatda ən bərbad günümü yaşayanda, kefim tamamilə olmayanda belə, sadəcə səninlə bir neçə dəqiqə danışmaq mənə bəs edir ki, dünyanın ən xoşbəxt, ən güclü insanına çevrilim. Sənin səsin mənim üçün bütün dərdlərin dərmanıdır. Səni tanıdığım o ilk andan bəri içimdəki o boşluğun necə sürətlə dolduğunu sözlərlə ifadə edə bilmirəm.\n\nBu məktubu, bu sözləri sənə yazmaq üçün günlərlə düşündüm, özümlə mübarizə apardım. Çünki sənin mənə qarşı olan hisslərindən tam əmin deyildim. Mənim haqqımda nə düşündüyünü bilməmək məni daxilən yeyib bitirirdi. Bəlkə də bu mesajdan sonra mənə qəzəblənəcəksən, bəlkə də bir daha mənimlə danışmaq, üzümü görmək istəməyəcəksən. Bu qorxu məni iflic edirdi. Çünki bir neçə gün əvvəl mənə "biz sadəcə dostuq" demişdin. O cümləni dilindən eşitdiyim andan bəri, sənə zahirən büruzə verməsəm də, yavaş-yavaş, içdən-içə ölürəm. Sənin o "dost" kəlmən mənim ürəyimə saplanan ən küt bıçaq oldu. Çünki həmin an səninlə bağlı qurduğum bütün o gözəl xəyallarım, gələcəyə dair ümidlərim bir anda başıma yıxıldı. Heç kimə bu qədər bağlana biləcəyimi təsəvvür etməzdim, amma sən mənə özümü tanıtdın, mənə tam əksini göstərdi. Həyatıma belə sürətlə girib, ürəyimin bütün ritmini dəyişə biləcək başqa bir insan yoxdur.\n\nMən sənin sadəcə zahiri gözəlliyinə vurulmamışam, Nərmin. Mən belə bəsit bir sevgi bəsləmirəm sənə. Mən sənin heyranedici intellektuallığına, fərqli düşüncə tərzinə, dünyaya olan o dərin baxışına və iti zəkana aşiq olmuşam. Səninlə danışanda ruhumun savadlandığını, genişləndiyini hiss edirəm. Amma tam olaraq səni nəyə görə sevdiyimi soruşsan, inan ki, konkret bir cavab verə bilmərəm. Çünki insan birini səbəblərə görə sevirsə, o səbəblər bitəndə sevgi də bitir. Mən isə səni sən olduğun üçün, ruhunun hər bir zərrəsi üçün sevirəm və hisslərimdən adımı bildiyim kimi əminəm. Mənə görə sevgi heç bir sübut, heç bir məntiqi dəlil axtarmır. Əgər mən sənə sevgimi riyazi düsturlarla, sübutlarla bəyan etməyə çalışsam, bu sevginin bütün sehrli tərəfi, magiyası qaçar. Sevgi bir inancdır. Kor-koranə deyil, ruhən olan bir inanc. Və mən bütün qəlbimlə inanıram ki, sənin də içində mənə qarşı, bəlkə də hələ özünə belə etiraf edə bilmədiyin gizli hisslər var. Əsl sevgi üçün illərə ehtiyac yoxdur, sadəcə iki ruhun bir-birini tanıması kifayətdir.\n\nYadındadısa, WhatsApp-da mənə o "cycle" (dövrü) səs effektinin mənasını soruşmuşdun. O vaxt bəlkə də keçişdirdim, amma onun əsl mənası bir-birini dəlicəsinə sevən iki insanların ürəyindən keçən, amma dillərinə gətirə bilmədikləri o sonsuz səs dalğasıdır. Dünya necə Günəşin ətrafında dönməyə məhkumdursa, sən də mənim daxili kainatımın yeganə Günəşisən. Mən ise sənin ətrafında fırlanan, səndən işıq alan o kiçik dünyayam. Sən olmasan, mən sonsuz bir qaranlıqda, kosmosun o buz kimi soyuq boşluğunda qalaram. İçimdə nə bir həyat qalar, nə də bir ümid. Sən mənə yaşamaq enerjisi verirsən. Sən mənə yenidən insan olduğumu, gülməyin, nəfəs almağın nə qədər gözəl bir şey olduğunu xatırlatdın. Mən səndən əvvəl sadəcə mövcud idim, sən gəldin və mən yaşamağa başladım.\n\nYaxın gələcəkdə mən xaricə gedəndə, bəlkə də içində gizli bir narahatlıq olacaq. Bəlkə də düşünəcəksən ki, uzaqlıq bizi tamamilə qoparacak, mən orada başqaları ilə olacam, səni unudacam. Amma sən bu dünyadakı hər şeydən daha çox əmin ola bilərsən ki, mənim gözüm səndən başqasını görməyəcək. Çünki sən mənim üçün bu dünyadakı qaranlıq, azğın ruhların arasında öz təmiz işığı ilə mənə yol göstərən, məni qoruyan yeganə mələksən. Sən mənim üçün yer üzünə 60.000 ildə bir dəfə gələn, hamının heyranlıqla baxdığı, amma yalnız tək bir nəfərin ruhuna toxunan o nadir Halley ulduzu kimisən. Və mən o ulduzu həyatımın bu xüsusi dönəmində görmüşkən, ömrümün sonuna qədər gözlərimi ondan ayıra bilmərəm.\n\nXahiş edirəm, bu sözlərimi sadəcə bir dostun anlıq emosiyası kimi oxuyub kənara atma. Çünki bu sətirlərin hər bir hərfində mənim ürəyimə döyüntüsü, gözlərimin kədəri və sənə olan sonsuz inamım var. Əgər bu mesajdan sonra məni həyatından tamamilə silmək istəsən belə, bil ki, mən həmişə sənin arxanda, səni uzaqdan da olsa qoruyan və sevən o insan olaraq qalacam. Amma mən inanıram ki, bizim hekayəmiz belə tez və burada bitə bilməz. Çünki Halley ulduzu keçdiyi yerdə silinməz izlər qoyur və sən mənim ruhumda elə bir iz qoydun ki, onu nə zaman, nə də uzaqlıqlar silə bilər. Səni çox sevirəm, Nərmin. Həyatımın mənası, günəşim və tək gerçəyim sənsən...\n\nHəmişə səninlə və həmişə sənə aid...`;
 
+        // Ekran ölçüsü dəyişəndə yenidən hesabla
         window.addEventListener('resize', () => {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
             if (currentMode === 'scatter' || currentMode === 'orbit') initStars();
         });
 
-        document.getElementById('btnMusic').addEventListener('click', () => {
+        // Musiqi seçimləri
+        document.getElementById('btnMusic').addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
             document.getElementById('youtubeAudio').src = "https://www.youtube.com/embed/9w_Yh8A6S70?autoplay=1";
             closePopup();
         });
-        document.getElementById('btnNoMusic').addEventListener('click', closePopup);
+        document.getElementById('btnNoMusic').addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            closePopup();
+        });
 
         function closePopup() {
             document.getElementById('popupOverlay').style.opacity = '0';
             setTimeout(() => { 
                 document.getElementById('popupOverlay').style.display = 'none'; 
-                document.getElementById('clickHint').innerText = "Ürək formalaşdırmaq üçün ekrana klikləyin...";
+                document.getElementById('clickHint').innerText = "Ürək formalaşdırmaq üçün ekrana toxunun...";
             }, 600);
         }
 
-        document.getElementById('halleyComet').addEventListener('click', (e) => {
+        // Halley Ulduzuna toxunma (Mobil dəstəkli)
+        document.getElementById('halleyComet').addEventListener('pointerdown', (e) => {
             e.stopPropagation();
             const msgBox = document.getElementById('cometMsg');
             msgBox.classList.add('show');
             setTimeout(() => { msgBox.classList.remove('show'); }, 5000);
         });
 
+        // Ürək Düsturu
         function getHeartPoint(t) {
             const x = 16 * Math.pow(Math.sin(t), 3);
             const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
             return { x: x, y: -y };
         }
 
+        // Mobil Ürək "SENI SEVIREM" yazısı koordinatları
         function getSeniSeviremTarget(index) {
             const rows = [
                 " SSS  EEEE N   N III   SSS  EEEE V   V III RRRR  EEEE M   M ",
@@ -253,14 +274,16 @@
                 "SSSS  EEEE N   N III  SSSS  EEEE   V   III R  R  EEEE M   M "
             ];
             let targetPoints = [];
-            const startX = width / 2 - 240;
-            const startY = height / 2 - 40; 
-            const spacing = 8;
+            // iPhone 15 kimi dar və uzun ekranlar üçün yazının miqyasını kiçildirik (spacing 5.5)
+            const spacingX = width < 500 ? 5.5 : 8;
+            const spacingY = width < 500 ? 11 : 15;
+            const startX = width / 2 - (rows[0].length * spacingX) / 2;
+            const startY = height / 2 - (rows.length * spacingY) / 2; 
 
             for (let r = 0; r < rows.length; r++) {
                 for (let c = 0; c < rows[r].length; c++) {
                     if (rows[r][c] !== ' ') {
-                        targetPoints.push({ x: startX + c * spacing, y: startY + r * 15 });
+                        targetPoints.push({ x: startX + c * spacingX, y: startY + r * spacingY });
                     }
                 }
             }
@@ -270,27 +293,30 @@
 
         function initStars() {
             stars = [];
+            // iPhone 15 ölçülərinə (diaqonalına) uyğun miqyas təyini
+            const scale = Math.min(width, height) / (width < 500 ? 35 : 45);
+
             for (let i = 0; i < numStars; i++) {
                 const x = Math.random() * width;
                 const y = Math.random() * height;
                 
                 const t = Math.random() * Math.PI * 2;
                 const heartPos = getHeartPoint(t);
-                const scale = Math.min(width, height) / 45; 
                 
                 let heartX, heartY;
-                if (i < 700) {
+                if (i < 500) { // Yazı nöqtələri
                     const textPos = getSeniSeviremTarget(i);
                     heartX = textPos.x;
                     heartY = textPos.y;
-                } else {
+                } else { // Ürək nöqtələri
                     heartX = width / 2 + heartPos.x * scale;
                     heartY = height / 2 + heartPos.y * scale;
                 }
 
+                // Kainat (Universe) diski ölçüləri
                 const angle = Math.random() * Math.PI * 2;
-                const minRadius = Math.min(width, height) * 0.40; 
-                const maxRadius = Math.max(width, height) * 0.70;
+                const minRadius = Math.min(width, height) * 0.35; 
+                const maxRadius = Math.max(width, height) * 0.75;
                 const radius = minRadius + Math.random() * (maxRadius - minRadius);
                 
                 stars.push({
@@ -299,10 +325,10 @@
                     orbitRadius: radius,
                     orbitAngle: angle,
                     orbitSpeed: (Math.random() * 0.002 + 0.0006) * (Math.random() > 0.5 ? 1 : -1),
-                    size: Math.random() * 1.2 + 0.3,
+                    size: Math.random() * 1.1 + 0.3,
                     alpha: Math.random() * 0.6 + 0.2,
-                    vx: (Math.random() - 0.5) * 0.25, 
-                    vy: (Math.random() - 0.5) * 0.25,
+                    vx: (Math.random() - 0.5) * 0.3, 
+                    vy: (Math.random() - 0.5) * 0.3,
                     isSpiralParticle: false,
                     spiralProgress: 0,
                     targetX: 0, targetY: 0,
@@ -322,7 +348,7 @@
                     if (s.x < 0 || s.x > width) s.vx *= -1;
                     if (s.y < 0 || s.y > height) s.vy *= -1;
                 } else if (currentMode === 'heart') {
-                    // İSTƏDİYİN DƏYİŞİKLİK: Sürəti 0.018-dən 0.0065-ə saldım. Ürək çox zərif və aramla birləşəcək.
+                    // Sənin istədiyin o zərif və aram sürət (0.0065) saxlanıldı
                     s.x += (s.heartX - s.x) * 0.0065;
                     s.y += (s.heartY - s.y) * 0.0065;
                 } else if (currentMode === 'orbit') {
@@ -362,7 +388,6 @@
             }
 
             stars = stars.filter(s => s.alpha > 0);
-
             requestAnimationFrame(animate);
         }
 
@@ -380,13 +405,14 @@
                 container.appendChild(span);
 
                 if (char.trim() !== "") {
+                    // Mobildə dəqiq oxu təyin edən və sürüşməni kompensasiya edən yeni metod
                     const box = span.getBoundingClientRect();
                     const tx = box.left + box.width / 2;
                     const ty = box.top + box.height / 2;
 
-                    for (let k = 0; k < 5; k++) {
+                    for (let k = 0; k < 4; k++) {
                         const startAngle = Math.random() * Math.PI * 2;
-                        const startRadius = Math.min(width, height) * 0.38 + Math.random() * 120;
+                        const startRadius = Math.min(width, height) * 0.35 + Math.random() * 80;
                         
                         stars.push({
                             x: tx + Math.cos(startAngle) * startRadius,
@@ -396,7 +422,7 @@
                             startRadius: startRadius,
                             startAngle: startAngle,
                             spiralProgress: 0,
-                            size: Math.random() * 1.5 + 0.4,
+                            size: Math.random() * 1.3 + 0.4,
                             alpha: 0.9,
                             isSpiralParticle: true
                         });
@@ -409,15 +435,19 @@
             setTimeout(() => {
                 if (span.className) span.className = '';
                 startTypingEffect(container, text, charIndex + 1);
-            }, 30);
+            }, 35); // Mobildə oxuma rahatlığı üçün yazı sürəti bir azca optimallaşdırıldı
         }
 
-        window.addEventListener('click', () => {
+        // HƏM KOMPÜTER HƏM SMARTFONDA (IPHONE) TOXUNUŞU TUTAN YENİ METOD: pointerdown
+        window.addEventListener('pointerdown', (e) => {
+            // Əgər klik popup üzərindədirsə, fon hərəkətlərini dayandırırıq
             if (document.getElementById('popupOverlay').style.display !== 'none') return;
+            // Əgər istifadəçi mətni aşağı-yuxarı sürüşdürürsə, rejimi dəyişmirik
+            if (e.target.closest('#mainTextContent')) return;
 
             if (currentMode === 'scatter') {
                 currentMode = 'heart';
-                document.getElementById('clickHint').innerText = "Mətni başlatmaq üçün ekrana yenidən klikləyin...";
+                document.getElementById('clickHint').innerText = "Mətni başlatmaq üçün ekrana yenidən toxunun...";
             } else if (currentMode === 'heart') {
                 currentMode = 'orbit'; 
                 document.getElementById('clickHint').style.display = 'none';
