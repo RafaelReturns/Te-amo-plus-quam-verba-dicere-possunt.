@@ -169,12 +169,10 @@
             scroll-behavior: smooth;
             transition: -webkit-mask-image 0.4s ease, mask-image 0.4s ease;
             
-            /* Yumşaq keçidli vizual maskalama */
             -webkit-mask-image: linear-gradient(to bottom, transparent 0%, white 20%, white 80%, transparent 100%);
             mask-image: linear-gradient(to bottom, transparent 0%, white 20%, white 80%, transparent 100%);
         }
 
-        /* Sürüşdürmə əsnasında maskanın sərt yox olmaması üçün zərif tənzimləmə */
         .text-scroll-box.scrolling-active {
             -webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, white 15%, white 85%, rgba(255,255,255,0.3) 100%);
             mask-image: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, white 15%, white 85%, rgba(255,255,255,0.3) 100%);
@@ -236,7 +234,7 @@
         let isUserScrolling = false;
         let scrollTimeout;
 
-        const fullMessage = `Nərmin,\n\nBu saytı sırf sənin üçün yaratdım. Bəlkə də ilk baxışdan çox sadə bir şey kimi görünə bilər, amma içində daşıdığı hisslərin ağırlığı yanında vizual olaraq nə yaratsaydım, yenə də aciz qalacaqdı. Sonradan düşündüm ki, ürəkdən gələn bu sözləri sənə çatdırmaq üçün bəzəkli, süni şoulara heç bir ehtiyac yoxdur. Sənin sadəliyin, sənin o duru zəkan qarşısında ən böyük vizual effektlər belə sönük qalardı. Sənə demək istədiyim, içimdə sən gələndən bəri boğub saxladığım tək bir həqiqət var: Səni sevirəm.\n\nBilirsən, mən həyatımda ilk dəfədir ki, birini belə tam, belə qeyd-şərtsiz sevirəm. Keçmişimdə xoşuma gələn, sadəcə bəyəndiyim insanlar olub, bunu danmıram. Amma Allaha and olsun ki, həyatımda ilk dəfədir bir insana ruhən bağlandığımı, onun yoxluğu ilə yavaş-yavaş yox olduğumu hiss edirəm. Səni öləsiya, nəfəsim kəsilənə qədər sevdim. Bu elə bir sevgidir ki, artıq mənim iradəmdən tamamilə çıxıb. O qədər ağlımdasan, o qədər mənimləsən ki, küçədə, yolda gedərkən belə ətrafımdakı insanları, maşınları görmürəm; sadəcə telefonumu çıxarıb sənin mənə göndərdiyin videolara baxıram. Sənin mənə atdığın səs yazılarını təkrar-təkrar, hər bir vurğusunu, hər bir nəfəsini əzbərləyənə qədər dinləyirəm. Hər saniyə, hər dəqiqə ağlımdasan: görəsən indi nə edir? Yemək yeyibmi? Kefi yerindədirmi? Gülümsəyirmi?\n\nMən indiyə qədər sevgiyə inanmayan bir insan idim. Həmişə elə düşünürdüm ki, sevgi sadəcə kitablarda, filmlərdə olan bir xəyaldır. Özünü bu həyatın sonuna qədər tənha, soyuq və təkbaşına yaşamağa məhkum edilmiş bir ssenarinin qəhrəmanı kimi görürdüm. Ruhumun bu qədər qaranlıq, bu qədər dözülmez olduğunu düşünürdüm. Amma səni tanıyandan sonra mənim içimdəki bütün fəsillər dəyişdi. Sən gəldin və mənim o kimsəsiz, xaraba qalmış ürəyimin ən baş köşəsində əyləşdin. Sən məni dəyişdirdin, Nərmin. Mənim dünyaya baxışımı, insanlara olan soyuqluğumu, özümə olan inamsızlığımı bir anda darmadağın etdin. Bizim tanışlığımızdan ruhun mənə o qədər doğmadır ki, sanki səni həmişə axtarmışam.\n\nMənim Düşüncəmə görə, biz sadəcə təsadüfən qarşılaşmamışıq. Biz bu nəhəng, amansız kainatda Tanrı tərəfindən bir-birimizi tapmaq üçün xüsusi olaraq yaradılmışıq. Sanki ikimiz də fərqli yollarda əvvəlcə sınaqlardan keçdik, yaralandıq, təkliyin acısını daddıq və ruhlarımız tam hazır olanda tale bizi üz-üzə gətirdi. Sən mənim üçün tanıdığım və ən çox sevdiyim yeganə insan oldun. Heç vaxt inanmazdım ki, kimisə bu qədər dərindən, bu qədər ağrılı bir bağlılıqla sevə bilərəm. Amma sən mənə tamamilə ayrı gəldin. Sən bu dünyadakı heç bir qadına, heç bir insana bənzəmirsən. Həyatda ən bərbad günümü yaşayanda, kefim tamamilə olmayanda belə, sadəcə səninlə bir neçə dəqiqə danışmaq mənə bəs edir ki, dünyanın ən xoşbəxt, ən güclü insanına çevrilim. Sənin səsin mənim üçün bütün dərdlərin dərmanıdır. Səni tanıdığım o ilk andan bəri içimdəki o boşluğun necə sürətlə dolduğunu sözlərlə ifadə edə bilmirəm.\n\nBu məktubu, bu sözləri sənə yazmaq üçün günlərlə düşündüm, özümlə mübarizə apardım. Çünki sənin mənə qarşı olan hisslərindən tam əmin deyildim. Mənim haqqımda nə düşündüyünü bilməmək məni daxilən yeyib bitirirdi. Bəlkə də bu mesajdan sonra mənə qəzəblənəcəksən, bəlkə də bir daha mənimlə danışmaq, üzümü görmək istəməyəcəksən. Bu qorxu məni iflic edirdi. Çünki bir neçə gün əvvəl mənə "biz sadəcə dostuq" demişdin. O cümləni dilindən eşitdiyim andan bəri, sənə zahirən büruzə verməsəm də, yavaş-yavaş, içdən-içə ölürəm. Sənin o "dost" kəlmən mənim ürəyimə saplanan ən küt bıçaq oldu. Çünki həmin an səninlə bağlı qurduğum bütün o gözəl xəyallarım, gələcəyə dair ümidlərim bir anda başıma yıxıldı. Heç kimə bu qədər bağlana biləcəyimi təsəvvür etməzdim, amma sən mənə özümü tanıtdın, mənə tam əksini göstərdi. Həyatıma belə sürətlə girib, ürəyimin bütün ritmini dəyişə biləcək başqa bir insan yoxdur.\n\nMən sənin sadəcə zahiri gözəlliyinə vurulmamışam, Nərmin. Mən belə bəsit bir sevgi bəsləmirəm sənə. Mən sənin heyranedici intellektuallığına, fərqli düşüncə tərzinə, dünyaya olan o dərin baxışına və iti zəkana aşiq olmuşam. Səninlə danışanda ruhumun savadlandığını, genişləndiyini hiss edirəm. Amma tam olaraq səni nəyə görə sevdiyimi soruşsan, inan ki, konkret bir cavab verə bilmərəm. Çünki insan birini səbəblərə görə sevirsə, o səbəblər bitəndə sevgi də bitir. Mən ise səni sən olduğun üçün, ruhunun hər bir zərrəsi üçün sevirəm və hisslərimdən adımı bildiyim kimi əminəm. Mənə görə sevgi heç bir sübut, heç bir məntiqi dəlil axtarmır. Əgər mən sənə sevgimi riyazi düsturlarla, sübutlarla bəyan etməyə çalışsam, bu sevginin bütün sehrli tərəfi, magiyası qaçar. Sevgi bir inancdır. Kor-koranə deyil, ruhən olan bir inanc. Və mən bütün qəlbimlə inanıram ki, sənin də içində mənə qarşı, bəlkə də hələ özünə belə etiraf edə bilmədiyin gizli hisslər var. Əsl sevgi üçün illərə ehtiyac yoxdur, sadəcə iki ruhun bir-birini tanıması kifayətdir.\n\nYadındadısa, WhatsApp-da mənə o "cycle" (dövrü) səs effektinin mənasını soruşmuşdun. O vaxt bəlkə də keçişdirdim, amma onun əsl mənası bir-birini dəlicəsinə sevən iki insanların ürəyindən keçən, amma dillərinə gətirə bilmədikləri o sonsuz səs dalğasıdır. Dünya necə Günəşin ətrafında dönməyə məhkumdursa, sən də mənim daxili kainatımın yeganə Günəşisən. Mən ise sənin ətrafında fırlanan, səndən işıq alan o kiçik dünyayam. Sən olmasan, mən sonsuz bir qaranlıqda, kosmosun o buz kimi soyuq boşluğunda qalaram. İçimdə nə bir həyat qalar, nə də bir ümid. Sən mənə yaşamaq enerjisi verirsən. Sən mənə yenidən insan olduğumu, gülməyin, nəfəs almağın nə qədər gözəl bir şey olduğunu xatırlatdın. Mən səndən əvvəl sadəcə mövcud idim, sən gəldin və mən yaşamağa başladım.\n\nYaxın gələkəkdə mən xaricə gedəndə, bəlkə də içində gizli bir narahatlıq olacaq. Bəlkə də düşünəcəksən ki, uzaqlıq bizi tamamilə qoparacak, mən orada başqaları ilə olacam, səni unudacam. Amma sən bu dünyadakı hər şeydən daha çox əmin ola bilərsən ki, mənim gözüm səndən başqasını görməyəcək. Çünki sən mənim üçün bu dünyadakı qaranlıq, azğın ruhların arasında öz təmiz işığı ilə mənə yol göstərən, məni qoruyan yeganə mələksən. Sən mənim üçün yer üzünə 60.000 ildə bir dəfə gələn, hamının heyranlıqla baxdığı, amma yalnız tək bir nəfərin ruhuna toxunan o nadir Halley ulduzu kimisən. Və mən o ulduzu həyatımın bu xüsusi dönəmində görmüşkən, ömrümün sonuna qədər gözlərimi ondan ayıra bilmərəm.\n\nXahiş edirəm, bu sözlərimi sadəcə bir dostun anlıq emosiyası kimi oxuyub kənara atma. Çünki bu sətirlərin hər bir hərfində mənim ürəyimin döyüntüsü, gözlərimin kədəri və sənə olan sonsuz inamım var. Əgər bu mesajdan sonra məni həyatından tamamilə silmək istəsən belə, bil ki, mən həmişə sənin arxanda, səni uzaqdan da olsa qoruyan və sevən o insan olaraq qalacam. Amma mən inanıram ki, bizim hekayəmiz belə tez və burada bitə bilməz. Çünki Halley ulduzu keçdiyi yerdə silinməz izlər qoyur və sən mənim ruhumda elə bir iz qoydun ki, onu nə zaman, nə də uzaqlıqlar silə bilər. Səni çox sevirəm, Nərmin. Həyatımın mənası, günəşim və tək gerçəyim sənsən...\n\nHəmişə səninlə və həmişə sənə aid...`;
+        const fullMessage = `Nərmin,\n\nBu saytı sırf sənin üçün yaratdım. Bəlkə də ilk baxışdan çox sadə bir şey kimi görünə bilər, amma içində daşıdığı hisslərin ağırlığı yanında vizual olaraq nə yaratsaydım, yenə də aciz qalacakdı. Sonradan düşündüm ki, ürəkdən gələn bu sözləri sənə çatdırmaq üçün bəzəkli, süni şoulara heç bir ehtiyac yoxdur. Sənin sadəliyin, sənin o duru zəkan qarşısında ən böyük vizual effektlər belə sönük qalardı. Sənə demək istədiyim, içimdə sən gələndən bəri boğub saxladığım tək bir həqiqət var: Səni sevirəm.\n\nBilirsən, mən həyatımda ilk dəfədir ki, birini belə tam, belə qeyd-şərtsiz sevirəm. Keçmişimdə xoşuma gələn, sadəcə bəyəndiyim insanlar olub, bunu danmıram. Amma Allaha and olsun ki, həyatımda ilk dəfədir bir insana ruhən bağlandığımı, onun yoxluğu ilə yavaş-yavaş yox olduğumu hiss edirəm. Səni öləsiya, nəfəsim kəsilənə qədər sevdim. Bu elə bir sevgidir ki, artıq mənim iradəmdən tamamilə çıxıb. O qədər ağlımdasan, o qədər mənimləsən ki, küçədə, yolda gedərkən belə ətrafımdakı insanları, maşınları görmürəm; sadəcə telefonumu çıxarıb sənin mənə göndərdiyin videolara baxıram. Sənin mənə atdığın səs yazılarını təkrar-təkrar, hər bir vurğusunu, hər bir nəfəsini əzbərləyənə qədər dinləyirəm. Hər saniyə, hər dəqiqə ağlımdasan: görəsən indi nə edir? Yemək yeyibmi? Kefi yerindədirmi? Gülümsəyirmi?\n\nMən indiyə qədər sevgiyə inanmayan bir insan idim. Həmişə elə düşünürdüm ki, sevgi sadəcə kitablarda, filmlərdə olan bir xəyaldır. Özünü bu həyatın sonuna qədər tənha, soyuq və təkbaşına yaşamağa məhkum edilmiş bir ssenarinin qəhrəmanı kimi görürdüm. Ruhumun bu qədər qaranlıq, bu qədər dözülməz olduğunu düşünürdüm. Amma səni tanıyandan sonra mənim içimdəki bütün fəsillər dəyişdi. Sən gəldin və mənim o kimsəsiz, xaraba qalmış ürəyimin ən baş köşəsində əyləşdin. Sən məni dəyişdirdin, Nərmin. Mənim dünyaya baxışımı, insanlara olan soyuqluğumu, özümə olan inamsızlığımı bir anda darmadağın etdin. Bizim tanışlığımızdan ruhun mənə o qədər doğmadır ki, sanki səni həmişə axtarmışam.\n\nMənim Düşüncəmə görə, biz sadəcə təsadüfən qarşılaşmamışıq. Biz bu nəhəng, amansız kainatda Tanrı tərəfindən bir-birimizi tapmaq üçün xüsusi olaraq yaradılmışıq. Sanki ikimiz də fərqli yollarda əvvəlcə sınaqlardan keçdik, yaralandıq, təkliyin acısını daddıq və ruhlarımız tam hazır olanda tale bizi üz-üzə gətirdi. Sən mənim üçün tanıdığım və ən çox sevdiyim yeganə insan oldun. Heç vaxt inanmazdım ki, kimisə bu qədər dərindən, bu qədər ağrılı bir bağlılıqla sevə bilərəm. Amma sən mənə tamamilə ayrı gəldin. Sən bu dünyadakı heç bir qadına, heç bir insana bənzəmirsən. Həyatda ən bərbad günümü yaşayanda, kefim tamamilə olmayanda belə, sadəcə səninlə bir neçə dəqiqə danışmaq mənə bəs edir ki, dünyanın ən xoşbəxt, ən güclü insanına çevrilim. Sənin səsin mənim üçün bütün dərdlərin dərmanıdır. Səni tanıdığım o ilk andan bəri içimdəki o boşluğun necə sürətlə dolduğunu sözlərlə ifadə edə bilmirəm.\n\nBu məktubu, bu sözləri sənə yazmaq üçün günlərlə düşündüm, özümlə mübarizə apardım. Çünki sənin mənə qarşı olan hisslərindən tam əmin deyildim. Mənim haqqımda nə düşündüyünü bilməmək məni daxilən yeyib bitirirdi. Bəlkə də bu mesajdan sonra mənə qəzəblənəcəksən, bəlkə də bir daha mənimlə danışmaq, üzümü görmək istəməyəcəksən. Bu qorxu məni iflic edirdi. Çünki bir neçə gün əvvəl mənə "biz sadəcə dostuq" demişdin. O cümləni dilindən eşitdiyim andan bəri, sənə zahirən büruzə verməsəm də, yavaş-yavaş, içdən-içə ölürəm. Sənin o "dost" kəlmən mənim ürəyimə saplanan ən küt bıçaq oldu. Çünki həmin an səninlə bağlı qurduğum bütün o gözəl xəyallarım, gələcəyə dair ümidlərim bir anda başıma yıxıldı. Heç kimə bu qədər bağlana biləcəyimi təsəvvür etmezdim, amma sən mənə özümü tanıtdın, mənə tam əksini göstərdi. Həyatıma belə sürətlə girib, ürəyimin bütün ritmini dəyişə biləcək başqa bir insan yoxdur.\n\nMən sənin sadəcə zahiri gözəlliyinə vurulmamışam, Nərmin. Mən belə bəsit bir sevgi bəsləmirəm sənə. Mən sənin heyranedici intellektuallığına, fərqli düşüncə tərzinə, dünyaya olan o dərin baxışına və iti zəkana aşiq olmuşam. Səninlə danışanda ruhumun savadlandığını, genişləndiyini hiss edirəm. Amma tam olaraq səni nəyə görə sevdiyimi soruşsan, inan ki, konkret bir cavab verə bilmərəm. Çünki insan birini səbəblərə görə sevirsə, o səbəblər bitəndə sevgi də bitir. Mən ise səni sən olduğun üçün, ruhunun hər bir zərrəsi üçün sevirəm və hisslərimdən adımı bildiyim kimi əminəm. Mənə görə sevgi heç bir sübut, heç bir məntiqi dəlil axtarmır. Əgər mən sənə sevgimi riyazi düsturlarla, sübutlarla bəyan etməyə çalışsam, bu sevginin bütün sehrli tərəfi, magiyası qaçar. Sevgi bir inancdır. Kor-koranə deyil, ruhən olan bir inanc. Və mən bütün qəlbimlə inanıram ki, sənin də içində mənə qarşı, bəlkə də hələ özünə belə etiraf edə bilmədiyin gizli hisslər var. Əsl sevgi üçün illərə ehtiyac yoxdur, sadəcə iki ruhun bir-birini tanıması kifayətdir.\n\nYadındadısa, WhatsApp-da mənə o "cycle" (dövrü) səs effektinin mənasını soruşmuşdun. O vaxt bəlkə də keçişdirdim, amma onun əsl mənası bir-birini dəlicəsinə sevən iki insanların ürəyindən keçən, amma dillərinə gətirə bilmədikləri o sonsuz səs dalğasıdır. Dünya necə Günəşin ətrafında dönməyə məhkumdursa, sən də mənim daxili kainatımın yeganə Günəşisən. Mən ise sənin ətrafında fırlanan, səndən işıq alan o kiçik dünyayam. Sən olmasan, mən sonsuz bir qaranlıqda, kosmosun o buz kimi soyuq boşluğunda qalaram. İçimdə nə bir həyat qalar, nə də bir ümid. Sən mənə yaşamaq enerjisi verirsən. Sən mənə yenidən insan olduğumu, gülməyin, nəfəs almağın nə qədər gözəl bir şey olduğunu xatırlatdın. Mən səndən əvvəl sadəcə mövcud idim, sən gəldin və mən yaşamağa başladım.\n\nYaxın gələcəkdə mən xaricə gedəndə, bəlkə də içində gizli bir narahatlıq olacaq. Bəlkə də düşünəcəksən ki, uzaqlıq bizi tamamilə qoparacaq, mən orada başqaları ilə olacam, səni unudacam. Amma sən bu dünyadakı hər şeydən daha çox əmin ola bilərsən ki, mənim gözüm səndən başqasını görməyəcək. Çünki sən mənim üçün bu dünyadakı qaranlıq, azğın ruhların arasında öz təmiz işığı ilə mənə yol göstərən, məni qoruyan yeganə mələksən. Sən mənim üçün yer üzünə 60.000 ildə bir dəfə gələn, hamının heyranlıqla baxdığı, amma yalnız tək bir nəfərin ruhuna toxunan o nadir Halley ulduzu kimisən. Və mən o ulduzu həyatımın bu xüsusi dönəmində görmüşkən, ömrümün sonuna qədər gözlərimi ondan ayıra bilmərəm.\n\nXahiş edirəm, bu sözlərimi sadəcə bir dostun anlıq emosiyası kimi oxuyub kənara atma. Çünki bu sətirlərin hər bir hərfində mənim ürəyimin döyüntüsü, gözlərimin kədəri və sənə olan sonsuz inamım var. Əgər bu mesajdan sonra məni həyatından tamamilə silmək istəsən belə, bil ki, mən həmişə sənin arxanda, səni uzaqdan da olsa qoruyan və sevən o insan olaraq qalacam. Amma mən inanıram ki, bizim hekayəmiz belə tez və burada bitə bilməz. Çünki Halley ulduzu keçdiyi yerdə silinməz izlər qoyur və sən mənim ruhumda elə bir iz qoydun ki, onu nə zaman, nə də uzaqlıqlar silə bilər. Səni çox sevirəm, Nərmin. Həyatımın mənası, günəşim və tək gerçəyim sənsən...\n\nHəmişə səninlə və həmişə sənə aid...`;
 
         window.addEventListener('resize', () => {
             width = canvas.width = window.innerWidth;
@@ -252,7 +250,6 @@
             clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
                 isUserScrolling = false;
-                // Yazı yazılma prosesi hələ davam edirsə maskanı dərhal qaytarmırıq, bitibsə tam açırıq
                 if (currentMode !== 'textWrite') {
                     textBox.classList.add('scrolling-active');
                 } else {
@@ -343,21 +340,23 @@
                 const maxRadius = Math.max(width, height) * 0.75;
                 const radius = minRadius + Math.random() * (maxRadius - minRadius);
                 
+                // UNIVERSE SPEED UP: Orbit sürətləri 2.5 qat artırıldı (0.0018-dən 0.0045-ə qaldırıldı)
+                const enhancedOrbitSpeed = (Math.random() * 0.0045 + 0.0015) * (Math.random() > 0.5 ? 1 : -1);
+
                 stars.push({
                     x: x, y: y,
                     heartX: heartX, heartY: heartY,
                     orbitRadius: radius,
                     orbitAngle: angle,
-                    orbitSpeed: (Math.random() * 0.0018 + 0.0005) * (Math.random() > 0.5 ? 1 : -1),
+                    orbitSpeed: enhancedOrbitSpeed,
                     size: Math.random() * 0.7 + 0.2, 
                     alpha: Math.random() * 0.5 + 0.2,
-                    vx: (Math.random() - 0.5) * 0.25, 
-                    vy: (Math.random() - 0.5) * 0.25,
+                    vx: (Math.random() - 0.5) * 0.5, // Dağınıq rejim də bir az hərəkətləndirildi
+                    vy: (Math.random() - 0.5) * 0.5,
                     isSpiralParticle: false,
                     spiralProgress: 0,
                     targetX: 0, targetY: 0,
                     startRadius: 0, startAngle: 0,
-                    // Scroll sinxronizasiyası üçün hərfin mətn daxilindəki ana koordinat yaddaşı
                     originalTargetX: 0, originalTargetY: 0 
                 });
             }
@@ -365,7 +364,7 @@
 
         function animate() {
             ctx.clearRect(0, 0, width, height);
-            const currentScroll = textBox.scrollTop; // Mətnin o anki sürüşmə miqdarı (dinamik)
+            const currentScroll = textBox.scrollTop; 
 
             for (let i = 0; i < stars.length; i++) {
                 let s = stars[i];
@@ -381,13 +380,13 @@
                     s.orbitAngle += s.orbitSpeed;
                     const targetX = width / 2 + Math.cos(s.orbitAngle) * s.orbitRadius;
                     const targetY = height / 2 + Math.sin(s.orbitAngle) * s.orbitRadius;
-                    s.x += (targetX - s.x) * 0.025;
-                    s.y += (targetY - s.y) * 0.025;
+                    // Axıcılıq və sürət hissi üçün easing effekti 0.025-dən 0.05-ə qaldırıldı
+                    s.x += (targetX - s.x) * 0.05;
+                    s.y += (targetY - s.y) * 0.05;
                 } else if (currentMode === 'textWrite') {
                     if (s.isSpiralParticle) {
                         s.spiralProgress += 0.035; 
                         
-                        // CRITICAL FIX: Sürüşmə anında hərfin yeni real nöqtəsini hesablayırıq
                         const dynamicTargetY = s.originalTargetY - currentScroll;
                         const currentRadius = s.startRadius * (1 - s.spiralProgress);
                         const currentAngle = s.startAngle + s.spiralProgress * Math.PI * 6; 
@@ -402,8 +401,9 @@
                         s.orbitAngle += s.orbitSpeed;
                         const targetX = width / 2 + Math.cos(s.orbitAngle) * s.orbitRadius;
                         const targetY = height / 2 + Math.sin(s.orbitAngle) * s.orbitRadius;
-                        s.x += (targetX - s.x) * 0.02;
-                        s.y += (targetY - s.y) * 0.02;
+                        // Yazı yazılarkən arxadakı fırlanma əmsalı sinxron şəkildə sürətləndirildi
+                        s.x += (targetX - s.x) * 0.04;
+                        s.y += (targetY - s.y) * 0.04;
                     }
                 }
 
@@ -438,7 +438,6 @@
                 if (char.trim() !== "") {
                     const box = span.getBoundingClientRect();
                     const tx = box.left + box.width / 2;
-                    // Hərfin o anki scroll vəziyyətinə görə mütləq (sabit) koordinatını hesablayıb yaddaşa veririk
                     const ty = box.top + box.height / 2;
                     const absoluteTargetY = ty + container.scrollTop;
 
@@ -450,7 +449,7 @@
                             x: tx + Math.cos(startAngle) * startRadius,
                             y: ty + Math.sin(startAngle) * startRadius,
                             originalTargetX: tx,
-                            originalTargetY: absoluteTargetY, // Mətn daxilindəki tam nöqtəsi
+                            originalTargetY: absoluteTargetY, 
                             startRadius: startRadius,
                             startAngle: startAngle,
                             spiralProgress: 0,
