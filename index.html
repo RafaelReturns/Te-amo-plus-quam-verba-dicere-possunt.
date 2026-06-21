@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For You</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="heart">❤️</div>
+
+<div class="message" id="message"></div>
+
+<div class="popup" id="popup">
+  <h2>Bu mahnı bizim mahnımızdır 🎵</h2>
+  <button class="yes" onclick="startMusic()">Mahnı ilə davam et</button>
+  <button class="no" onclick="closePopup()">Mahnısız davam et</button>
+</div>
+
+<audio id="music" loop>
+  <source src="reflection.mp3" type="audio/mp3">
+</audio>
+
+<script src="script.js"></script>
+
+</body>
+</html>
