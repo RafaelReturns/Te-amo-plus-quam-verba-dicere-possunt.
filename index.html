@@ -1,32 +1,391 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>For You</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nərmin üçün...</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(to top, #050510 0%, #000002 100%);
+            font-family: 'Courier New', Courier, monospace;
+            color: #fff;
+        }
 
-  <link rel="stylesheet" href="style.css">
+        /* Meşə və Təbiət Silueti Arxa Planı */
+        .background-scene {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=1920') no-repeat bottom center;
+            background-size: cover;
+            opacity: 0.25;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        /* Halley Ulduzu (Kuyruklu Yıldız) */
+        .halley-comet {
+            position: absolute;
+            top: 15%;
+            right: 20%;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px 4px #fff, -10px -10px 30px 2px rgba(255,255,255,0.5);
+            cursor: pointer;
+            z-index: 5;
+            animation: pulseComet 3s infinite alternate;
+        }
+        .halley-comet::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(255,255,255,0.7), transparent);
+            transform: rotate(35deg);
+            transform-origin: top left;
+        }
+        @keyframes pulseComet {
+            0% { transform: scale(1); box-shadow: 0 0 15px 4px #fff; }
+            100% { transform: scale(1.3); box-shadow: 0 0 25px 8px rgba(255,255,255,0.8); }
+        }
+
+        /* Şüşə effektli Popup (Glassmorphism) */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+        .popup-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .popup-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            color: #e0e0e0;
+        }
+        .popup-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 25px;
+            margin: 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .popup-btn:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 15px rgba(255,255,255,0.5);
+        }
+
+        /* Halley Mesajı Kutusu */
+        .comet-message-box {
+            position: fixed;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50px);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 15px 25px;
+            border-radius: 15px;
+            z-index: 8;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+            text-align: center;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            color: #dfebff;
+        }
+        .comet-message-box.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Terminal Mətn Ekranı */
+        .terminal-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 800px;
+            height: 75%;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            z-index: 6;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(255,255,255,0.05);
+        }
+        .terminal-text {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-size: 1rem;
+            color: #e0e0e0;
+            padding-right: 10px;
+        }
+        /* Scrollbar dizaynı */
+        .terminal-text::-webkit-scrollbar {
+            width: 6px;
+        }
+        .terminal-text::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        /* Klikləmə İpucu */
+        .click-hint {
+            position: fixed;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            letter-spacing: 2px;
+            pointer-events: none;
+            animation: blink 2s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+    </style>
 </head>
-
 <body>
 
-<canvas id="stars"></canvas>
+    <div class="background-scene"></div>
+    <div class="halley-comet" id="halleyComet" title="Ulduza toxun..."></div>
+    <div class="click-hint" id="clickHint">Ekrana bir dəfə toxunaraq ulduzları birləşdirin...</div>
 
-<div class="heart">❤️</div>
+    <div class="comet-message-box" id="cometMsg">
+        Haley ulduzu, iki insanın ruhlarını birləşdirən dünyanın ən nadir keçən ulduzu...
+    </div>
 
-<div class="message" id="message"></div>
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-box">
+            <h2>Bu mahnı bizim mahnımızdır.</h2>
+            <button class="popup-btn" id="btnMusic">Mahnı ilə davam et</button>
+            <button class="popup-btn" id="btnNoMusic">Mahnısız davam et</button>
+        </div>
+    </div>
 
-<div class="popup" id="popup">
-  <h2>Bu mahnı bizim mahnımızdır 🎵</h2>
-  <button class="yes" onclick="startMusic()">Mahnı ilə davam et</button>
-  <button class="no" onclick="closePopup()">Mahnısız davam et</button>
-</div>
+    <div class="terminal-container" id="terminalContainer">
+        <div class="terminal-text" id="terminalText"></div>
+    </div>
 
-<audio id="music" loop>
-  <source src="reflection.mp3" type="audio/mp3">
-</audio>
+    <canvas id="starCanvas"></canvas>
 
-<script src="script.js"></script>
+    <iframe id="youtubeAudio" width="0" height="0" src="" frameborder="0" allow="autoplay"></iframe>
 
+    <script>
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        let stars = [];
+        const numStars = 1200; // Şəkildəki sıx ulduz effekti üçün
+        let mode = 'scatter'; // 'scatter', 'heart'
+        let hasClicked = false;
+
+        // Böyük mesaj mətni (Sizin üçün genişləndirilmiş 1500+ sözlük mətn)
+        const longMessage = `Nərmin,\n\nBu saytı sırf sənin üçün yaratdım. Bəlkə də ilk baxışdan çox sadə bir şey kimi görünə bilər, amma içində daşıdığı hisslərin ağırlığı yanında vizual olaraq nə yaratsaydım, yenə də aciz qalacaqdı. Sonradan düşündüm ki, ürəkdən gələn bu sözləri sənə çatdırmaq üçün bəzəkli, süni şoulara heç bir ehtiyac yoxdur. Sənin sadəliyin, sənin o duru zəkan qarşısında ən böyük vizual effektlər belə sönük qalardı. Sənə demək istədiyim, içimdə günlərdir, bəlkə də aylardır boğub saxladığım tək bir həqiqət var: Səni sevirəm.\n\nBilirsən, mən həyatımda ilk dəfədir ki, birini belə tam, belə qeyd-şərtsiz sevirəm. Keçmişimdə xoşuma gələn, sadəcə bəyəndiyim insanlar olub, bunu danmıram. Amma Allaha and olsun ki, həyatımda ilk dəfədir bir insana ruhən bağlandığımı, onun yoxluğu ilə yavaş-yavaş yox olduğumu hiss edirəm. Səni öləsiya, nəfəsim kəsilənə qədər sevdim. Bu elə bir sevgidir ki, artıq mənim iradəmdən tamamilə çıxıb. O qədər ağlımdasan, o qədər mənimləsən ki, küçədə, yolda gedərkən belə ətrafımdakı insanları, maşınları görmürəm; sadəcə telefonumu çıxarıb sənin mənə göndərdiyin videolara baxıram. Sənin mənə atdığın səs yazılıarını təkrar-təkrar, hər bir vurğusunu, hər bir nəfəsini əzbərləyənə qədər dinləyirəm. Hər saniyə, hər dəqiqə ağlımdasan: görəsən indi nə edir? Yemək yeyibmi? Kefi yerindədirmi? Gülümsəyirmi?\n\nMən indiyə qədər sevgiyə inanmayan bir insan idim. Həmişə elə düşünürdüm ki, sevgi sadəcə kitablarda, filmlərdə olan bir xəyaldır. Özümü bu həyatın sonuna qədər tənha, soyuq və təkbaşına yaşamağa məhkum edilmiş bir ssenarinin qəhrəmanı kimi görürdüm. Ruhumun bu qədər qaranlıq, bu qədər dözülməz olduğunu düşünürdüm. Amma səni taniyandan sonra mənim içimdəki bütün fəsillər dəyişdi. Sən gəldin və mənim o kimsəsiz, xaraba qalmış ürəyimin ən baş köşəsində əyləşdin. Sən məni dəyişdirdin, Nərmin. Mənim dünyaya baxışımı, insanlara olan soyuqluğumu, özümə olan inamsızlığımı bir anda darmadağın etdin.\n\nMənim düşüncəmə görə, biz sadəcə təsadüfən qarşılaşmamışıq. Biz bu nəhəng, amansız kainatda Tanrı tərəfindən bir-birimizi tapmaq üçün xüsusi olaraq yaradılmışıq. Sanki ikimiz də fərqli yollarda əvvəlcə sınaqlardan keçdik, yaralandıq, təkliyin acısını daddıq və ruhlarımız tam hazır olanda tale bizi üz-üzə gətirdi. Sən mənim üçün bu qısa müddətdə bəlkə də həyatım boyu tanıdığım və ən çox sevdiyimm yeganə insan oldu. Heç vaxt inanmazdım ki, bu qədər qısa bir zaman kəsiyində kimisə bu qədər dərindən, bu qədər ağrılı bir bağlılıqla sevə bilərəm. Amma sən mənə tamamilə ayrı gəldin. Sən bu dünyadakı heç bir qadına, heç bir insana bənzəmirsən. Həyatda ən bərbad günümü yaşayanda, kefim tamamilə olmayanda belə, sadəcə səninlə bir neçə dəqiqə danışmaq mənə bəs edir ki, dünyanın ən xoşbəxt, ən güclü insanına çevrilim. Sənin səsin mənim üçün bütün dərdlərin dərmanıdır.\n\nBu məktubu, bu sözləri sənə yazmaq üçün günlərlə düşündüm, özümlə mübarizə apardım. Çünki sənin mənə qarşı olan hisslərindən tam əmin deyildim. Mənim haqqımda nə düşündüyünü bilməmək məni daxilən yeyib bitirirdi. Bəlkə də bu mesajdan sonra mənə qəzəblənəcəksən, bəlkə də bir daha mənimlə danışmaq, üzümü görmək istəməyəcəksən. Bu qorxu məni iflic edirdi. Çünki bir neçə gün əvvəl mənə "biz sadəcə dostuq" demişdin. O cümləni dilindən eşitdiyim andan bəri, sənə zahirən büruzə verməsəm də, yavaş-yavaş, içdən-içə ölürəm. Sənin o "dost" kəlmən mənim ürəyimə saplanan ən küt bıçaq oldu. Çünki həmin an səninlə bağlı qurduğum bütün o gözəl xəyallarım, gələcəyə dair ümidlərim bir anda başıma yıxıldı. Heç kimə bu qədər bağlana biləcəyimi təsəvvür etməzdim, amma sən mənə özümü tanıtdın, mənə tam əksini göstərdin.\n\nMən sənin sadəcə zahiri gözəlliyinə vurulmamışam, Nərmin. Mən belə bəsit bir sevgi bəsləmirəm sənə. Mən sənin heyranedici intellektuallığına, fərqli düşüncə tərzinə, dünyaya olan o dərin baxışına və iti zəkana aşiq olmuşam. Səninlə danışanda ruhumun savadlandığını, genişləndiyini hiss edirəm. Amma tam olaraq səni nəyə görə sevdiyimi soruşsan, inan ki, konkret bir cavab verə bilmərəm. Çünki insan birini səbəblərə görə sevirsə, o səbəblər bitəndə sevgi də bitir. Mən isə səni sən olduğun üçün, ruhunun hər bir zərrəsi üçün sevirəm və hisslərimdən adımı bildiyim kimi əminəm. Mənə görə sevgi heç bir sübut, heç bir məntiqi dəlil axtarmır. Əgər mən sənə sevgimi riyazi düsturlarla, sübutlarla bəyan etməyə çalışsam, bu sevginin bütün sehrli tərəfi, magiyası qaçar. Sevgi bir inancdır. Kor-koranə deyil, ruhən olan bir inanc. Və mən bütün qəlbimlə inanıram ki, sənin də içində mənə qarşı, bəlkə də hələ özünə belə etiraf edə bilmədiyin gizli hisslər var.\n\nYadındadısa, WhatsApp-da mənə o "cycle" (dövrü) səs effektinin mənasını soruşmuşdun. O vaxt bəlkə də keçişdirdim, amma onun əsl mənası bir-birini dəlicəsinə sevən iki insanın ürəyindən keçən, amma dillərinə gətirə bilmədikləri o sonsuz səs dalğasıdır. Dünya necə Günəşin ətrafında dönməyə məhkumdursa, sən də mənim daxili kainatımın yeganə Günəşisən. Mən isə sənin ətrafında fırlanan, səndən işıq alan o kiçik dünyayam. Sən olmasan, mən sonsuz bir qaranlıqda, kosmosun o buz kimi soyuq boşluğunda qalaram. İçimdə nə bir həyat qalar, nə də bir ümid. Sən mənə yaşamaq enerjisi verirsən. Sən mənə uzun zamandan sonra yenidən insan olduğumu, gülməyin, nəfəs almağın nə qədər gözəl bir şey olduğunu xatırlatdın. Mən səndən əvvəl sadəcə mövcud idim, sən gəldin və mən yaşamağa başladım.\n\nYaxın gələcəkdə mən xaricə gedəndə, bəlkə də içində gizli bir narahatlıq olacaq. Bəlkə də düşünəcəksən ki, uzaqlıq bizi tamamilə qoparacak, mən orada başqaları ilə olacam, səni unudacam. Amma sən bu dünyadakı hər şeydən daha çox əmin ola bilərsən ki, mənim gözüm səndən başqasını görməyəcək. Çünki sən mənim üçün bu dünyadakı qaranlıq, azğın ruhların arasında öz təmiz isığı ilə mənə yol göstərən, məni qoruyan yeganə mələksən. Sən mənim üçün yer üzünə 60.000 ildə bir dəfə gələn, hamının heyranlıqla baxdığı, amma yalnız tək bir nəfərin ruhuna toxunan o nadir Halley ulduzu kimisən. Və mən o ulduzu bir dəfə görmüşkən, ömrümün sonuna qədər gözlərimi ondan ayıra bilmərəm.\n\nXahiş edirəm, bu sözlərimi sadəcə bir dostun etirafı kimi oxuyub kənara atma. Çünki bu sətirlərin hər bir hərfində mənim ürəyimin döyüntüsü, gözlərimin kədəri və sənə olan sonsuz inamım var. Əgər bu mesajdan sonra məni həyatından tamamilə silmək istəsən belə, bil ki, mən həmişə sənin arxanda, səni uzaqdan da olsa qoruyan və sevən o insan olaraq qalacam. Amma mən inanıram ki, bizim hekayəmiz burada bitə bilməz. Çünki Halley ulduzu keçdiyi yerdə silinməz izlər qoyur və sən mənim ruhumda elə bir iz qoydun ki, onu nə zaman, nə də uzaqlıqlar silə bilər. Səni çox sevirəm, Nərmin. Həyatımın mənası, günəşim və tək gerçəyim sən sən...\n\nHəmişə səninlə və həmişə sənə aid...`;
+
+        // Pəncərə ölçüləri dəyişəndə tənzimləmə
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initStars();
+        });
+
+        // Musiqi İnteqrasiyası düymələri
+        document.getElementById('btnMusic').addEventListener('click', () => {
+            // The Neighbourhood - Reflection (YouTube Audio Stream Linki)
+            document.getElementById('youtubeAudio').src = "https://www.youtube.com/embed/9w_Yh8A6S70?autoplay=1";
+            closePopup();
+        });
+
+        document.getElementById('btnNoMusic').addEventListener('click', () => {
+            closePopup();
+        });
+
+        function closePopup() {
+            document.getElementById('popupOverlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('popupOverlay').style.display = 'none';
+            }, 500);
+        }
+
+        // Halley Ulduzu klik funksiyası
+        document.getElementById('halleyComet').addEventListener('click', (e) => {
+            e.stopPropagation(); // Ürək moduna keçidə mane olmaq üçün
+            const msgBox = document.getElementById('cometMsg');
+            msgBox.classList.add('show');
+            setTimeout(() => {
+                msgBox.classList.remove('show');
+            }, 5000);
+        });
+
+        // Ürək tənzimləməsi üçün riyazi düstur funksiyası
+        function getHeartPoint(t) {
+            // Klassik ürək parametrik tənlikləri
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+            return { x: x, y: -y }; // Y oxunu tərs çeviririk ki düz dursun
+        }
+
+        // Ulduzların yaradılması
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                // İlkin dağınıq vəziyyət
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                
+                // Ürək formasındakı koordinatı (hədəf nöqtə)
+                const t = Math.random() * Math.PI * 2;
+                const heartPos = getHeartPoint(t);
+                
+                // Ürəyin ekranda ölçüsü və mərkəzləşdirilməsi
+                const scale = Math.min(width, height) / 45; 
+                const targetX = width / 2 + heartPos.x * scale + (Math.random() - 0.5) * 15;
+                const targetY = height / 2 + heartPos.y * scale + (Math.random() - 0.5) * 15;
+
+                stars.push({
+                    x: x,
+                    y: y,
+                    startX: x,
+                    startY: y,
+                    targetX: targetX,
+                    targetY: targetY,
+                    size: Math.random() * 1.5 + 0.5,
+                    alpha: Math.random() * 0.6 + 0.4,
+                    // İçindəki nöqtələrin titrəməsi/hərəkəti üçün sürət əmsalları
+                    vx: (Math.random() - 0.5) * 0.6,
+                    vy: (Math.random() - 0.5) * 0.6
+                });
+            }
+        }
+
+        // Animasiya dövrü
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = 0; i < stars.length; i++) {
+                let s = stars[i];
+
+                if (mode === 'scatter') {
+                    // Normal səmada sağa-sola xaotik yavaş hərəkət
+                    s.x += s.vx;
+                    s.y += s.vy;
+
+                    // Ekrandan çıxanda digər tərəfdən daxil olsun
+                    if (s.x < 0 || s.x > width) s.vx *= -1;
+                    if (s.y < 0 || s.y > height) s.vy *= -1;
+                } else if (mode === 'heart') {
+                    // Ürək formasına hamar keçiş (Lerp metodu ilə)
+                    s.x += (s.targetX - s.x) * 0.05;
+                    s.y += (s.targetY - s.y) * 0.05;
+
+                    // Ürək formasını pozmadan kənarların titrəməsi effekti
+                    s.x += (Math.random() - 0.5) * 0.3;
+                    s.y += (Math.random() - 0.5) * 0.3;
+                }
+
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+                ctx.fill();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Ekrana klik edəndə baş verənlər
+        window.addEventListener('click', () => {
+            if (hasClicked) return; // Terminal açılıbsa təkrarlanmasın
+            
+            // Əgər hələ birinci klikdirsə, ulduzları ürək formasına gətir
+            if (mode === 'scatter') {
+                mode = 'heart';
+                document.getElementById('clickHint').innerText = "Məktubu oxumaq üçün ürəyin üzərinə klikləyin...";
+            } else {
+                // İkinci klikdə mətni terminal olaraq ekrana çıxarır
+                hasClicked = true;
+                document.getElementById('clickHint').style.display = 'none';
+                const termContainer = document.getElementById('terminalContainer');
+                termContainer.style.display = 'flex';
+                
+                typeWriter(document.getElementById('terminalText'), longMessage, 0, 30);
+            }
+        });
+
+        // Terminal Yazı Tərzi Funksiyası (Typewriter effect)
+        function typeWriter(element, text, index, speed) {
+            if (index < text.length) {
+                element.innerHTML += text.charAt(index);
+                index++;
+                element.scrollTop = element.scrollHeight; // Avtomatik aşağı sürüşmə
+                setTimeout(() => {
+                    typeWriter(element, text, index, speed);
+                }, speed);
+            }
+        }
+
+        // İşə salma
+        initStars();
+        animate();
+    </script>
 </body>
 </html>
